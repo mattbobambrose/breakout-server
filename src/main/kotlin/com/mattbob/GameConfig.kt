@@ -1,6 +1,8 @@
 package com.mattbob
 
+import com.github.lalyos.jfiglet.FigletFont
 import kotlinx.serialization.Serializable
+import java.io.File
 
 @Serializable
 data class GameConfig(
@@ -11,18 +13,24 @@ data class GameConfig(
     val paddleHeight: Int = 10,
     val paddleSpeed: Int = 10,
     val paddleColor: String = "#0000FF",
-    val brickColor: String = "#00FF00",
-    val brickSideBufferSize: Double = 0.1,
-    val brickVerticalBufferSize: Double = 0.1,
+    val brickSideBufferSpace: Double = 0.1,
+    val brickVerticalBufferSpace: Double = 0.1,
     val pattern: String = """
-            # # ### #    #    ###
-            # # #   #    #    # #
-            ### ### #    #    # #
-            # # #   #    #    # #
-            # # ### #### #### ###
-        """,
+        HELLO
+        THERE
+    """.trimIndent(),
+    var brickPattern: String = "",
+    val brickColor: String = "#00FF00",
     val windowWidth: Int = 800,
     val windowHeight: Int = 600,
-    val backgroundColor: String = "#FF0000",
-    val bricksRandomColors: Boolean = true,
-)
+    val backgroundColor: String = "#000000",
+    val bricksRandomColors: Boolean = false,
+) {
+    //    http: //www.figlet.org/fonts/banner3.flf
+    fun assignBrickPattern() =
+        apply {
+            brickPattern = pattern.lines().map {
+                FigletFont.convertOneLine(File("src/main/resources/fonts/banner3.flf"), it).lines() + listOf("")
+            }.flatten().joinToString("\n")
+        }
+}
